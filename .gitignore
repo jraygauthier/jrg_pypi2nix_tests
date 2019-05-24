@@ -1,0 +1,7 @@
+.pytest_cache/
+.benchmarks/
+.eggs/
+**/.mypy_cache/
+/.vscode/*
+*.egg-info
+__pycache__/
