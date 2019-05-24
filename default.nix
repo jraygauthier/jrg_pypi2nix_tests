@@ -37,7 +37,7 @@ in python.mkDerivation {
     mypy_test_modules="$(find tests -name 'test_*.py')"
     mypy src/ $mypy_test_modules
     echo "Running pytest ..."
-    PYTHONPATH=$PWD/src:$PYTHONPATH pytest -v --cov=src/ tests/
+    PYTHONPATH=$PWD/src:$PYTHONPATH pytest -v tests/
   '';
 
   postInstall = ''
