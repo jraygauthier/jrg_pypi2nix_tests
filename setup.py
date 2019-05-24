@@ -5,6 +5,6 @@ with open("src/jrg_pypi2nix_tests/VERSION") as f:
 
 # Everything is defined in `setup.cfg`.
 setup(
-    # version=version,
+    version=version,
     use_scm_version=True,
 )

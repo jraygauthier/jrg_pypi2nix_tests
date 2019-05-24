@@ -10,10 +10,10 @@ with (import ./sandbox-pkgs.nix { inherit usePinnedNixpkgs; });
 runCommand "dummy"
 {
   buildInputs = [
-    nodePackages.node2nix
     pypi2nix
     coreutils
     nix
+    git
     myEnv.tools.getPinnedNixpkgsUrl
     myEnv.tools.getPythonVersion
   ];

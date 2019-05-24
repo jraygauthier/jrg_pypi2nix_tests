@@ -32,25 +32,17 @@ let
       pkgs = pypi2nixNixpkgs;
     });
 
+    nix-gitignore-src = super.fetchFromGitHub {
+      owner = "siers";
+      repo = "nix-gitignore";
+      rev = "221d4aea15b4b7cc957977867fd1075b279837b3";
+      sha256 = "0xgxzjazb6qzn9y27b2srsp2h9pndjh3zjpbxpmhz0awdi7h8y9m";
+    };
+    nix-gitignore = super.callPackage nix-gitignore-src {};
+
     # TODO: Need special case for pypy?
     pythonVersionToNixpkgsPythonAttrSetName = versionStr: "python${super.lib.replaceChars ["."] [""] versionStr}";
     pythonVersionToNixpkgsPythonPackagesAttrSetName = versionStr: "${pythonVersionToNixpkgsPythonAttrSetName versionStr}Packages";
-
-    # Some useful extensions to nix lib (used as dependency to various `default.nix` files).
-    myNixLib = rec {
-      cleanSourceExcludingRegexes = src: regexes: super.lib.cleanSourceWith {
-          filter = (path: type:
-            let relPath = super.lib.removePrefix (toString src + "/") (toString path);
-            in !(super.lib.any (re: builtins.match re relPath != null) regexes)
-               && super.lib.cleanSourceFilter path type);
-          inherit src;
-        };
-      cleanPythonSource = src: cleanSourceExcludingRegexes src [
-        "(^|.+/)(__pycache__|.mypy_cache|.pytest_cache)$"
-        "^build$"
-        ".*\.egg-info$" ".*\.pyc$"
-      ];
-    };
 
     # Add a description of the user's environement to nixpkgs package set.
     myEnv = rec {

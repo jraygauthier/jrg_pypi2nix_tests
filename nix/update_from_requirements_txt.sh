@@ -38,8 +38,8 @@ interpreter_args="-V ${myEnvPythonVersion}"
 reqs_args="-r ./requirements.txt -r ./requirements-dev.txt"
 # -e "../#egg=jrg_pypi2nix_tests" \
 # overrides_args="--overrides ./nix/python_overrides.nix"
-overrides_args=""
-# --default-overrides
+# overrides_args=""
+overrides_args="--default-overrides"
 generated_files_args="--basename ./nix/requirements"
 
 # Note that moving the cache as part of the repo
@@ -65,18 +65,9 @@ mkdir -p "${cache_dir}"
 # in order to know the transitive deps).
 #
 common_setup_args='-s setuptools-scm -s pytest-runner'
-scipy_setup_args='-s numpy -E gfortran'
-bcrypt_setup_args='-s cffi -E libffi'
-opencv_setup_args='-E opencv3'
-scikit_setup_args='-E hdf5'
-cryptography_setup_args='-E openssl'
-pygobject_setup_args='-s pycairo -E cairo -E gobjectIntrospection'
-# For Pillow?
-misc_setup_args='-E pkgconfig -E zlib -E libjpeg -E openjpeg -E libtiff -E freetype -E lcms2 -E libwebp -E tcl'
-empty_setup_args=''
 
 setup_args=$(cat <<EOF
-${empty_setup_args}
+${common_setup_args}
 EOF
 )
 

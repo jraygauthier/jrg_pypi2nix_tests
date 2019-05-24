@@ -1,1 +1,5 @@
 # -e ./#egg=jrg_pypi2nix_tests
+mypy
+pytest
+black
+flake8
