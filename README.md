@@ -1,8 +1,20 @@
 Readme
 ======
 
-This is a project whose main goal is to test and demonstrate pypi2nix's
+This is a project whose main goal is to test and demonstrate [pypi2nix]'s
 capabilities and how to properly structure a project around it.
+
+This project might also serve as a scafolding / template / example for new
+[pypi2nix] projects.
+
+Some highlights of this project:
+
+ -  It uses by default a pinned nixpkgs set which you can find in
+    `./nix/sandbox-pkgs.nix`.
+
+ -  Uses `setuptools_scm` to version the project so that a git tag such
+    as `v0.0.0` is used as the single source of truth for the project's
+    version.
 
 
 Dependencies
@@ -16,7 +28,7 @@ Optional:
 
  -  [direnv](https://direnv.net/)
 
-    This allows for automatically
+    This allows for automatically entering / reloading the nix environment.
 
 
 Any other dependencies will be automatically introduced / managed by nix.
@@ -87,6 +99,26 @@ $ nix build
 
 The result will be under `./result`.
 
+Note that all the tests described in `default.nix::checkPhase` will be
+performed.
+
+
+Entering a prod environment
+---------------------------
+
+```bash
+nix run -f .
+```
+
+From this environement, you should be able to use your program:
+
+```bash
+$ jrg_pypi2nix_tests
+```
+
+Note that same as described in [building this project] section above,
+all test described in `default.nix::checkPhase` will be performed.
+
 
 Refresh python dependencies from pypi
 -------------------------------------
@@ -95,10 +127,22 @@ Refresh python dependencies from pypi
 $ ./nix/update_from_requirements_txt.sh
 ```
 
-This will update the following files:
+This utility script uses `pypi2nix` in order to create a nix file with the set
+of python dependencies specified by the following files:
+
+ -  `requirements.txt`
+ -  `requirements-dev.txt`
+
+and generate the following files:
+
+ -  `./nix/requirements_frozen.txt`
+
+    The frozen requirements you are used to.
 
  -  `./nix/requirements.nix`
- -  `./nix/requirements_frozen.txt`
+
+    A nix expression defining a python interpreter that has access to the frozen
+    set of python dependencies.
 
 
 Adding a new dependency
@@ -117,6 +161,17 @@ Adding a new dependency
  -  [Reload your dev env]
 
 
+Creating an *sdist* / source tarball for this project
+-----------------------------------------------------
 
+```bash
+$ python setup.py sdist
+```
+
+
+
+[pypi2nix]: https://github.com/garbas/pypi2nix
 [Reload your dev env]: #reloading-the-dev-environment
 [Refresh python deps from pypi]: #refresh-python-dependencies-from-pypi
+[building this project]: #building-this-project
+

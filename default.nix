@@ -6,7 +6,7 @@ let
   pkgs = sandboxPkgs;
 
   python = import ./nix/requirements.nix { inherit pkgs; };
-  version = pkgs.lib.fileContents ./src/jrg_pypi2nix_tests/VERSION;
+  version = pkgs.lib.fileContents ./src/jrg_pypi2nix_tests/fallback_version.txt;
   additionalIgnores = [];
 
   readLines = file: with pkgs.lib; splitString "\n" (removeSuffix "\n" (builtins.readFile file));
