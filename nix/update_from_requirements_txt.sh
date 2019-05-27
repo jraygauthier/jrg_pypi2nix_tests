@@ -65,9 +65,11 @@ mkdir -p "${cache_dir}"
 # in order to know the transitive deps).
 #
 common_setup_args='-s setuptools-scm -s pytest-runner'
+pyce_setup_args='-s cryptography'
 
 setup_args=$(cat <<EOF
-${common_setup_args}
+${common_setup_args} \
+${pyce_setup_args}
 EOF
 )
 

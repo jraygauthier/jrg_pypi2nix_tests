@@ -2,7 +2,7 @@
 # See more at: https://github.com/garbas/pypi2nix
 #
 # COMMAND:
-#   pypi2nix -vvv -V 3 -r ./requirements.txt -r ./requirements-dev.txt --default-overrides --cache-dir /home/rgauthier/.cache/pypi2nix_cache --basename ./nix/requirements -s setuptools-scm -s pytest-runner
+#   pypi2nix -vvv -V 3 -r ./requirements.txt -r ./requirements-dev.txt --default-overrides --cache-dir /home/rgauthier/.cache/pypi2nix_cache --basename ./nix/requirements -s setuptools-scm -s pytest-runner -s cryptography
 #
 
 { pkgs ? import <nixpkgs> {},
@@ -120,6 +120,22 @@ let
       };
     };
 
+    "asn1crypto" = python.mkDerivation {
+      name = "asn1crypto-0.24.0";
+      src = pkgs.fetchurl {
+        url = "https://files.pythonhosted.org/packages/fc/f1/8db7daa71f414ddabfa056c4ef792e1461ff655c2ae2928a2b675bfed6b4/asn1crypto-0.24.0.tar.gz";
+        sha256 = "9d5c20441baf0cb60a4ac34cc447c6c189024b6b4c6cd7877034f4965c464e49";
+      };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs ++ [ ];
+      propagatedBuildInputs = [ ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "https://github.com/wbond/asn1crypto";
+        license = licenses.mit;
+        description = "Fast ASN.1 parser and serializer with definitions for private keys, public keys, certificates, CRL, OCSP, CMS, PKCS#3, PKCS#7, PKCS#8, PKCS#12, PKCS#5, X.509 and TSP";
+      };
+    };
+
     "atomicwrites" = python.mkDerivation {
       name = "atomicwrites-1.3.0";
       src = pkgs.fetchurl {
@@ -189,6 +205,24 @@ let
       };
     };
 
+    "cffi" = python.mkDerivation {
+      name = "cffi-1.12.3";
+      src = pkgs.fetchurl {
+        url = "https://files.pythonhosted.org/packages/93/1a/ab8c62b5838722f29f3daffcc8d4bd61844aa9b5f437341cc890ceee483b/cffi-1.12.3.tar.gz";
+        sha256 = "041c81822e9f84b1d9c401182e174996f0bae9991f33725d059b771744290774";
+      };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs ++ [ ];
+      propagatedBuildInputs = [
+        self."pycparser"
+      ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "http://cffi.readthedocs.org";
+        license = licenses.mit;
+        description = "Foreign Function Interface for Python calling C code.";
+      };
+    };
+
     "chardet" = python.mkDerivation {
       name = "chardet-3.0.4";
       src = pkgs.fetchurl {
@@ -202,6 +236,28 @@ let
         homepage = "https://github.com/chardet/chardet";
         license = licenses.lgpl3;
         description = "Universal encoding detector for Python 2 and 3";
+      };
+    };
+
+    "cryptography" = python.mkDerivation {
+      name = "cryptography-2.6.1";
+      src = pkgs.fetchurl {
+        url = "https://files.pythonhosted.org/packages/07/ca/bc827c5e55918ad223d59d299fff92f3563476c3b00d0a9157d9c0217449/cryptography-2.6.1.tar.gz";
+        sha256 = "26c821cbeb683facb966045e2064303029d572a87ee69ca5a1bf54bf55f93ca6";
+      };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs ++ [ ];
+      propagatedBuildInputs = [
+        self."asn1crypto"
+        self."cffi"
+        self."flake8"
+        self."idna"
+        self."six"
+      ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "https://github.com/pyca/cryptography";
+        license = licenses.bsdOriginal;
+        description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers.";
       };
     };
 
@@ -223,9 +279,10 @@ let
 
     "flake8" = python.mkDerivation {
       name = "flake8-3.7.7";
-      src = pkgs.fetchurl {
-        url = "https://files.pythonhosted.org/packages/23/e7/80626da76ff2b4c94ac9bcd92898a1011d1c891e0ba1343f24109923462d/flake8-3.7.7.tar.gz";
-        sha256 = "859996073f341f2670741b51ec1e67a01da142831aa1fdc6242dbf88dffbe661";
+      src = pkgs.fetchhg {
+        url = "https://bitbucket.org/tarek/flake8";
+        sha256 = "1n0fzlzmfmynnay0n757yh3qwjd9xxcfi7vq4sxqvsv90c441s7v";
+        rev = "a209fb69350c";
       };
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
@@ -357,6 +414,25 @@ let
       };
     };
 
+    "pyce" = python.mkDerivation {
+      name = "pyce-1.0.0-patch1";
+      src = pkgs.fetchgit {
+        url = "https://github.com/jraygauthier/pyce.git";
+        sha256 = "0injihxk31p203v0p92d8br9k7yaikgpy3dng4zqjhr7h2kgv7fz";
+        rev = "8e2acc532a019e2d3da989456f48f3e12a486a8b";
+      };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs ++ [ ];
+      propagatedBuildInputs = [
+        self."cryptography"
+      ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "https://github.com/soroco/pyce";
+        license = "Apache Software License Version 2.0";
+        description = "Execute encrypted Python bytecode.";
+      };
+    };
+
     "pycodestyle" = python.mkDerivation {
       name = "pycodestyle-2.5.0";
       src = pkgs.fetchurl {
@@ -370,6 +446,22 @@ let
         homepage = "https://pycodestyle.readthedocs.io/";
         license = "Expat license";
         description = "Python style guide checker";
+      };
+    };
+
+    "pycparser" = python.mkDerivation {
+      name = "pycparser-2.19";
+      src = pkgs.fetchurl {
+        url = "https://files.pythonhosted.org/packages/68/9e/49196946aee219aead1290e00d1e7fdeab8567783e83e1b9ab5585e6206a/pycparser-2.19.tar.gz";
+        sha256 = "a988718abfad80b6b157acce7bf130a30876d27603738ac39f140993246b25b3";
+      };
+      doCheck = commonDoCheck;
+      buildInputs = commonBuildInputs ++ [ ];
+      propagatedBuildInputs = [ ];
+      meta = with pkgs.stdenv.lib; {
+        homepage = "https://github.com/eliben/pycparser";
+        license = licenses.bsdOriginal;
+        description = "C parser in Python";
       };
     };
 
@@ -443,6 +535,7 @@ let
       propagatedBuildInputs = [
         self."certifi"
         self."chardet"
+        self."cryptography"
         self."idna"
         self."urllib3"
       ];
@@ -527,6 +620,7 @@ let
       buildInputs = commonBuildInputs ++ [ ];
       propagatedBuildInputs = [
         self."certifi"
+        self."cryptography"
         self."idna"
       ];
       meta = with pkgs.stdenv.lib; {

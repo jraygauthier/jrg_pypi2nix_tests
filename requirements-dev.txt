@@ -2,4 +2,16 @@
 mypy
 pytest
 black
-flake8
+# flake8
+# This is an example of getting the package from a mercurial repository.
+-e hg+https://bitbucket.org/tarek/flake8@a209fb6#egg=flake8
+cryptography
+# pyce
+# This is an example of getting the package from a git repository.
+# It actually patch over V1.0 removing pinned version of the
+# `cryptography` dependency.
+# This one will make us think we're patching pyce 2.0.
+# -e git+https://github.com/pradyunsg/pyce.git@571df1eb7093d4e7f26e2b5ef83d82a5fd58611c#egg=pyce
+# This is better. It sets a special pyce-1.0.0-patch1 package name which better indicate
+# what's going on.
+-e git+https://github.com/jraygauthier/pyce.git@8e2acc532a019e2d3da989456f48f3e12a486a8b#egg=pyce
