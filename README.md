@@ -12,6 +12,15 @@ Some highlights of this project:
  -  It uses by default a pinned nixpkgs set which you can find in
     `./nix/sandbox-pkgs.nix`.
 
+ -  It uses a completely pure environment from which to run `pypi2nix`.
+    This environment is defined in `./nix/tools-deps.nix` which share
+    the pinned `<nixpkgs>` with the actual project environement. We
+    use nix's shebang notation to run the `update_from_requirements_txt.sh`.
+
+ -  All `pypi2nix` arguments are encoded in the
+    `update_from_requirements_txt.sh` script which make running `pypi2nix`
+    a reproducible process.
+
  -  Uses `setuptools_scm` to version the project so that a git tag such
     as `v0.0.0` is used as the single source of truth for the project's
     version.
