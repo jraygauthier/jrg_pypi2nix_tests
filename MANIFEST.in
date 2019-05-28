@@ -1,0 +1,4 @@
+exclude .gitignore MANIFEST.in
+# exclude requirements-dev.txt
+# prune tests
+# prune nix
