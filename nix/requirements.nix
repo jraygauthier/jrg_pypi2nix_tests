@@ -2,7 +2,7 @@
 # See more at: https://github.com/garbas/pypi2nix
 #
 # COMMAND:
-#   pypi2nix -vvv -V 3 -r ./requirements.txt -r ./requirements-dev.txt --default-overrides --cache-dir /home/rgauthier/.cache/pypi2nix_cache --basename ./nix/requirements -s setuptools-scm -s pytest-runner -s cryptography
+#   pypi2nix -vvv -V 3 -r ./requirements.txt -r ./requirements-dev.txt --default-overrides --cache-dir /home/rgauthier/.cache/pypi2nix_cache --basename ./nix/requirements -s setuptools-scm -s pytest-runner -s cryptography -E libffi -E openssl
 #
 
 { pkgs ? import <nixpkgs> {},
@@ -35,7 +35,7 @@ let
       };
   };
 
-  commonBuildInputs = [];
+  commonBuildInputs = with pkgs; [ libffi openssl ];
   commonDoCheck = false;
 
   withPackages = pkgs':
@@ -250,7 +250,6 @@ let
       propagatedBuildInputs = [
         self."asn1crypto"
         self."cffi"
-        self."flake8"
         self."idna"
         self."six"
       ];
@@ -258,44 +257,6 @@ let
         homepage = "https://github.com/pyca/cryptography";
         license = licenses.bsdOriginal;
         description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers.";
-      };
-    };
-
-    "entrypoints" = python.mkDerivation {
-      name = "entrypoints-0.3";
-      src = pkgs.fetchurl {
-        url = "https://files.pythonhosted.org/packages/b4/ef/063484f1f9ba3081e920ec9972c96664e2edb9fdc3d8669b0e3b8fc0ad7c/entrypoints-0.3.tar.gz";
-        sha256 = "c70dd71abe5a8c85e55e12c19bd91ccfeec11a6e99044204511f9ed547d48451";
-      };
-      doCheck = commonDoCheck;
-      buildInputs = commonBuildInputs ++ [ ];
-      propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
-        homepage = "https://github.com/takluyver/entrypoints";
-        license = "UNKNOWN";
-        description = "Discover and load entry points from installed packages.";
-      };
-    };
-
-    "flake8" = python.mkDerivation {
-      name = "flake8-3.7.7";
-      src = pkgs.fetchhg {
-        url = "https://bitbucket.org/tarek/flake8";
-        sha256 = "1n0fzlzmfmynnay0n757yh3qwjd9xxcfi7vq4sxqvsv90c441s7v";
-        rev = "a209fb69350c";
-      };
-      doCheck = commonDoCheck;
-      buildInputs = commonBuildInputs ++ [ ];
-      propagatedBuildInputs = [
-        self."entrypoints"
-        self."mccabe"
-        self."pycodestyle"
-        self."pyflakes"
-      ];
-      meta = with pkgs.stdenv.lib; {
-        homepage = "https://gitlab.com/pycqa/flake8";
-        license = licenses.mit;
-        description = "the modular source code checker: pep8, pyflakes and co";
       };
     };
 
@@ -312,22 +273,6 @@ let
         homepage = "https://github.com/kjd/idna";
         license = licenses.bsdOriginal;
         description = "Internationalized Domain Names in Applications (IDNA)";
-      };
-    };
-
-    "mccabe" = python.mkDerivation {
-      name = "mccabe-0.6.1";
-      src = pkgs.fetchurl {
-        url = "https://files.pythonhosted.org/packages/06/18/fa675aa501e11d6d6ca0ae73a101b2f3571a565e0f7d38e062eec18a91ee/mccabe-0.6.1.tar.gz";
-        sha256 = "dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f";
-      };
-      doCheck = commonDoCheck;
-      buildInputs = commonBuildInputs ++ [ ];
-      propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
-        homepage = "https://github.com/pycqa/mccabe";
-        license = "Expat license";
-        description = "McCabe checker, plugin for flake8";
       };
     };
 
@@ -383,10 +328,10 @@ let
     };
 
     "pluggy" = python.mkDerivation {
-      name = "pluggy-0.11.0";
+      name = "pluggy-0.9.0";
       src = pkgs.fetchurl {
-        url = "https://files.pythonhosted.org/packages/0d/a1/862ab336e8128fde20981d2c1aa8506693412daf5083b1911d539412676b/pluggy-0.11.0.tar.gz";
-        sha256 = "25a1bc1d148c9a640211872b4ff859878d422bccb59c9965e04eed468a0aa180";
+        url = "https://files.pythonhosted.org/packages/a7/8c/55c629849c64e665258d8976322dfdad171fa2f57117590662d8a67618a4/pluggy-0.9.0.tar.gz";
+        sha256 = "19ecf9ce9db2fce065a7a0586e07cfb4ac8614fe96edf628a264b1c70116cf8f";
       };
       doCheck = commonDoCheck;
       buildInputs = commonBuildInputs ++ [ ];
@@ -405,7 +350,9 @@ let
         sha256 = "dc639b046a6e2cff5bbe40194ad65936d6ba360b52b3c3fe1d08a82dd50b5e53";
       };
       doCheck = commonDoCheck;
-      buildInputs = commonBuildInputs ++ [ ];
+      buildInputs = commonBuildInputs ++ [
+        self."setuptools-scm"
+      ];
       propagatedBuildInputs = [ ];
       meta = with pkgs.stdenv.lib; {
         homepage = "http://py.readthedocs.io/";
@@ -433,22 +380,6 @@ let
       };
     };
 
-    "pycodestyle" = python.mkDerivation {
-      name = "pycodestyle-2.5.0";
-      src = pkgs.fetchurl {
-        url = "https://files.pythonhosted.org/packages/1c/d1/41294da5915f4cae7f4b388cea6c2cd0d6cd53039788635f6875dfe8c72f/pycodestyle-2.5.0.tar.gz";
-        sha256 = "e40a936c9a450ad81df37f549d676d127b1b66000a6c500caa2b085bc0ca976c";
-      };
-      doCheck = commonDoCheck;
-      buildInputs = commonBuildInputs ++ [ ];
-      propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
-        homepage = "https://pycodestyle.readthedocs.io/";
-        license = "Expat license";
-        description = "Python style guide checker";
-      };
-    };
-
     "pycparser" = python.mkDerivation {
       name = "pycparser-2.19";
       src = pkgs.fetchurl {
@@ -462,22 +393,6 @@ let
         homepage = "https://github.com/eliben/pycparser";
         license = licenses.bsdOriginal;
         description = "C parser in Python";
-      };
-    };
-
-    "pyflakes" = python.mkDerivation {
-      name = "pyflakes-2.1.1";
-      src = pkgs.fetchurl {
-        url = "https://files.pythonhosted.org/packages/52/64/87303747635c2988fcaef18af54bfdec925b6ea3b80bcd28aaca5ba41c9e/pyflakes-2.1.1.tar.gz";
-        sha256 = "d976835886f8c5b31d47970ed689944a0262b5f3afa00a5a7b4dc81e5449f8a2";
-      };
-      doCheck = commonDoCheck;
-      buildInputs = commonBuildInputs ++ [ ];
-      propagatedBuildInputs = [ ];
-      meta = with pkgs.stdenv.lib; {
-        homepage = "https://github.com/PyCQA/pyflakes";
-        license = licenses.mit;
-        description = "passive checker of Python programs";
       };
     };
 

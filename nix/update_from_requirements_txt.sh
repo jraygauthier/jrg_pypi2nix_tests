@@ -66,10 +66,14 @@ mkdir -p "${cache_dir}"
 #
 common_setup_args='-s setuptools-scm -s pytest-runner'
 pyce_setup_args='-s cryptography'
+cffi_setup_args='-E libffi'
+cryptography_setup_args='-E openssl'
 
 setup_args=$(cat <<EOF
 ${common_setup_args} \
-${pyce_setup_args}
+${pyce_setup_args} \
+${cffi_setup_args} \
+${cryptography_setup_args}
 EOF
 )
 

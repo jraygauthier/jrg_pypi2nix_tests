@@ -4,7 +4,7 @@ pytest
 black
 # flake8
 # This is an example of getting the package from a mercurial repository.
--e hg+https://bitbucket.org/tarek/flake8@a209fb6#egg=flake8
+# -e hg+https://bitbucket.org/tarek/flake8@a209fb6#egg=flake8
 cryptography
 # pyce
 # This is an example of getting the package from a git repository.
@@ -15,3 +15,11 @@ cryptography
 # This is better. It sets a special pyce-1.0.0-patch1 package name which better indicate
 # what's going on.
 -e git+https://github.com/jraygauthier/pyce.git@8e2acc532a019e2d3da989456f48f3e12a486a8b#egg=pyce
+
+# Pluggy introduces a dependency on `importlib-metadata`
+# which cause us trouble.
+# Processing ./pluggy-0.10.0-py2.py3-none-any.whl
+# Collecting importlib-metadata>=0.9 (from pluggy==0.10.0)
+# Could not find a version that satisfies the requirement importlib-metadata>=0.9 (from pluggy==0.10.0) (from versions: )
+# No matching distribution found for importlib-metadata>=0.9 (from pluggy==0.10.0)
+pluggy == 0.9.0

@@ -12,6 +12,7 @@ runCommand "dummy"
   buildInputs = [
     pypi2nix
     coreutils
+    which
     nix
     git
     nix-prefetch-git
