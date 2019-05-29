@@ -25,6 +25,15 @@ Some highlights of this project:
     as `v0.0.0` is used as the single source of truth for the project's
     version.
 
+ -  Creation of encrypted distributions / releases using [pyce]. This is a tool
+    which allow one to encrypt / sign all modules of a project and then, at
+    runtime, hooking into the python import mechanic, unencrypt and validate the
+    module. More info available at [soroco blog post on pyce]
+
+ -  Provide some helper script to help one through a *private* or unofficial (i.e:
+    non pypi) release process using repositories. The project also demonstrate
+    how to use such releases in a setuptools / pypi2nix compliant way.
+
 
 Dependencies
 ------------
@@ -170,17 +179,60 @@ Adding a new dependency
  -  [Reload your dev env]
 
 
-Creating an *sdist* / source tarball for this project
------------------------------------------------------
+Creating an *sdist* / *source release( for this project
+-------------------------------------------------------
+
+One would usually have done it this way:
 
 ```bash
 $ python setup.py sdist
 ```
 
+however, we created a helper script `./make_sdist` which will unpack the release
+to a side repository `../jrg_pypi2nix_tests-sdist` allowing one to use mere
+repository for the release process (e.g: for unofficial or private release).
+
+This also allows one to more easily iterate through the validation process.
+
+A similar `./make_bdist.sh` helper script is provided for producing a *bdist*
+in the same fashion. However, it does not function as well with the nix store
+(nix store paths are used). 
+
+
+Creating an *edist* / *encrypted release* for this project using pyce
+---------------------------------------------------------------------
+
+Demonstrate the process of producing encrypted distributions / releases using
+[pyce]. 
+
+This is a tool which allow one to encrypt / sign all modules of a
+project and then, at runtime, hooking into the python import mechanic, unencrypt
+and validate the module. 
+
+More info available at [soroco blog post on pyce]
+
+Same as above, we provide a simple to use helper script automating the whole
+process:
+
+```bash
+$ ./make_edist
+# ...
+```
+
+Once completed, the following artefacts should have been produced:
+
+ 1. `../jrg_pypi2nix_tests`: A readily versionable folder similar to the sdist
+    above but with a tweak: all `*.py` module files will have been replaced by
+    `*.pyce`, an encrypted and signed version of the module. 
+
+ 2. `../jrg_pypi2nix_tests-edist.pyce_keys.json`: A json fragment containing one
+    key per *pyce* encrypted / signed module. This should be kept secret and can
+    later be used to decrypt the module files and validate their content.
 
 
 [pypi2nix]: https://github.com/garbas/pypi2nix
 [Reload your dev env]: #reloading-the-dev-environment
 [Refresh python deps from pypi]: #refresh-python-dependencies-from-pypi
 [building this project]: #building-this-project
-
+[pyce]: https://github.com/soroco/pyce
+[soroco blog post on pyce]: https://blog.soroco.com/

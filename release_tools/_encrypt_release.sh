@@ -9,7 +9,7 @@ egg_name_and_version_stream="$(python setup.py --name --version)"
 egg_name=$(echo "$egg_name_and_version_stream" | head -n 1)
 release_suffix="-${release_type}"
 
-default_release_keys_output_file="../${egg_name}${release_suffix}.pyce_keys"
+default_release_keys_output_file="../${egg_name}${release_suffix}.pyce_keys.json"
 release_keys_output_file="${2:-${default_release_keys_output_file}}"
 
 release_repo_dir="../${egg_name}${release_suffix}"
