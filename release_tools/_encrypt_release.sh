@@ -29,10 +29,22 @@ test -d "$release_repo_dir" || \
 test -d "$release_keys_dir" || \
   1>&2 echo "ERROR: Target release keys output file's parent dir "$release_keys_dir" does not exists."
 
+
 to_be_encrypted_dirs=$(cat <<EOF
 ${release_repo_dir}/src
 EOF
 )
+echo "$ echo \"\$to_be_encrypted_dirs\""
+echo "$to_be_encrypted_dirs"
+
+excluded_pyc_grep_pattern=$(cat <<EOF
+src/jrg_pypi2nix_tests/main.pyc|\
+/src/jrg_pypi2nix_tests/pycemagic.pyc
+EOF
+)
+echo "$ echo \"\$excluded_pyc_grep_pattern\""
+echo "$excluded_pyc_grep_pattern"
+
 
 to_be_compiled_py_files="$(echo "$to_be_encrypted_dirs" | xargs -r -I % find % -iname '*.py')"
 
@@ -44,10 +56,12 @@ echo "$ python -m compileall -b \"\$to_be_compiled_py_files\""
 echo "$to_be_compiled_py_files" | \
   xargs python -m compileall -b
 
-
-to_be_encrypted_pyc_files="$(echo "$to_be_encrypted_dirs" | xargs -r -I % find % -iname '*.pyc')"
+to_be_encrypted_pyc_files="$(echo "$to_be_encrypted_dirs" | \
+  xargs -r -I % find % -iname '*.pyc' | \
+  grep -v -E "$excluded_pyc_grep_pattern")"
 echo "$ echo \"\$to_be_encrypted_pyc_files\""
 echo "$to_be_encrypted_pyc_files"
+
 
 echo "$ python $RTOOLS_ROOT_DIR/_encrypt_using_pyce.py \"\$to_be_encrypted_pyc_files\""
 echo "$to_be_encrypted_pyc_files" | \
@@ -55,8 +69,9 @@ echo "$to_be_encrypted_pyc_files" | \
     -C "$release_repo_dir" \
     -o "$release_keys_output_file"
 
-
-to_be_removed_python_files="$(echo "$to_be_encrypted_dirs" | xargs -r -I % find % -iname '*.py' -o -iname '*.pyc')"
+# Note how we only remove '*.py' files. This is because the '*.pyc' files are automatically
+# replaced by their '*.pyce' equivalent.
+to_be_removed_python_files="$(echo "$to_be_encrypted_dirs" | xargs -r -I % find % -iname '*.py')"
 
 echo "$ echo \"\$to_be_removed_python_files\""
 echo "$to_be_removed_python_files"

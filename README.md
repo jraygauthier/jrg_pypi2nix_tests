@@ -230,9 +230,21 @@ Once completed, the following artefacts should have been produced:
     later be used to decrypt the module files and validate their content.
 
 
+License
+-------
+
+All of this code is released under the [Apache v2.0 License].
+
+See the copy at the root of this repository: [LICENSE].
+
+
+
+
 [pypi2nix]: https://github.com/garbas/pypi2nix
 [Reload your dev env]: #reloading-the-dev-environment
 [Refresh python deps from pypi]: #refresh-python-dependencies-from-pypi
 [building this project]: #building-this-project
 [pyce]: https://github.com/soroco/pyce
 [soroco blog post on pyce]: https://blog.soroco.com/
+[Apache v2.0 License]: https://www.apache.org/licenses/LICENSE-2.0
+[LICENSE]: ./LICENSE
