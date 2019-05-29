@@ -6,5 +6,6 @@
 /result
 *.egg-info
 __pycache__/
-dist/
+/dist/
+/build/
 fallback_version_from_setuptools_scm.txt

@@ -1,4 +1,6 @@
 exclude .gitignore MANIFEST.in
+exclude *.sh
+prune release_tools
 # exclude requirements-dev.txt
 # prune tests
 # prune nix
