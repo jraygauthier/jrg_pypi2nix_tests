@@ -1,4 +1,7 @@
 # -e ./#egg=jrg_pypi2nix_tests
+# TODO: Investigate.
+# ERROR: No matching distribution found for flit
+# ipython
 mypy
 pytest
 black

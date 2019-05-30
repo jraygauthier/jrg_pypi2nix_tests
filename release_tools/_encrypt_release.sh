@@ -12,7 +12,10 @@ release_suffix="-${release_type}"
 default_release_keys_output_file="../${egg_name}${release_suffix}.pyce_keys.json"
 release_keys_output_file="${2:-${default_release_keys_output_file}}"
 
-release_repo_dir="../${egg_name}${release_suffix}"
+default_release_parent_dir=".."
+release_parent_dir="${3:-${default_release_parent_dir}}"
+
+release_repo_dir="$release_parent_dir/${egg_name}${release_suffix}"
 release_keys_dir="$(dirname $release_keys_output_file)"
 
 printf -- "Encrypting release repository content\n"

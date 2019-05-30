@@ -230,6 +230,52 @@ Once completed, the following artefacts should have been produced:
     later be used to decrypt the module files and validate their content.
 
 
+Launching the application from the encrypted release
+----------------------------------------------------
+
+Simply go to the edist directory making sure you enter the nix environement:
+
+```bash
+$ cd ../jrg_pypi2nix_tests-edist
+$ nix-shell
+```
+
+```bash
+# Launching the app with the keys.
+$ ./launch_app_with_pyce_keys.sh 
+Hello world!
+!
+!
+!
+!
+!
+
+
+# lauching it wihout (to see it crash).
+$ ./launch_app_without_pyce_keys.sh 
+Traceback (most recent call last):
+  File "/run/user/1000/tmp.ipl9fB3uVE/bin/jrg_pypi2nix_tests", line 11, in <module>
+    load_entry_point('jrg-pypi2nix-tests', 'console_scripts', 'jrg_pypi2nix_tests')()
+  File "/nix/store/di6ivk6qr43n948xjsr2ghsfc93dm18j-python3.7-bootstrapped-pip-19.0.3/lib/python3.7/site-packages/pkg_resources/__init__.py", line 489, in load_entry_point
+    return get_distribution(dist).load_entry_point(group, name)
+  File "/nix/store/di6ivk6qr43n948xjsr2ghsfc93dm18j-python3.7-bootstrapped-pip-19.0.3/lib/python3.7/site-packages/pkg_resources/__init__.py", line 2793, in load_entry_point
+    return ep.load()
+  File "/nix/store/di6ivk6qr43n948xjsr2ghsfc93dm18j-python3.7-bootstrapped-pip-19.0.3/lib/python3.7/site-packages/pkg_resources/__init__.py", line 2411, in load
+    return self.resolve()
+  File "/nix/store/di6ivk6qr43n948xjsr2ghsfc93dm18j-python3.7-bootstrapped-pip-19.0.3/lib/python3.7/site-packages/pkg_resources/__init__.py", line 2417, in resolve
+    module = __import__(self.module_name, fromlist=['__name__'], level=0)
+  File "../jrg_pypi2nix_tests-edist/src/jrg_pypi2nix_tests/main.py", line 2, in <module>
+  File "<frozen importlib._bootstrap>", line 983, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 967, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 677, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 724, in exec_module
+  File "/nix/store/7ribnlk573ch5ad40ka3vcvhg604b4mf-python3.7-python3.7-pyce-1.0.0-patch1/lib/python3.7/site-packages/pyce/_imports.py", line 73, in get_code
+    data = decrypt(data, PYCEPathFinder.KEYS[normcase(relpath(path))])
+KeyError: 'src/jrg_pypi2nix_tests/main_lib.pyce'
+```
+
+
+
 License
 -------
 

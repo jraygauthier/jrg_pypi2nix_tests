@@ -1,5 +1,5 @@
 exclude .gitignore MANIFEST.in
-exclude *.sh
+exclude make_*dist.sh
 prune release_tools
 # exclude requirements-dev.txt
 # prune tests
