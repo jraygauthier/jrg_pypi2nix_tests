@@ -1,6 +1,6 @@
-
 import itertools
 from time import sleep
+
 
 def say_hello() -> None:
     print("Hello world!")

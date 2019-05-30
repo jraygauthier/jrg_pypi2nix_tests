@@ -8,7 +8,7 @@ from pathlib import Path
 def install_pyce_w_keys():
     pyce_key_file = None
     try:
-        pyce_key_file_env_str = os.environ['PYCE_KEYS_FILE_JRG_PYPI2NIX_TESTS'].strip()
+        pyce_key_file_env_str = os.environ["PYCE_KEYS_FILE_JRG_PYPI2NIX_TESTS"].strip()
         # Support the case where the env var was explicitly left empty. This might
         # be useful for testing purposes or even establish the expectation that
         # the project is installed *unencrypted".
